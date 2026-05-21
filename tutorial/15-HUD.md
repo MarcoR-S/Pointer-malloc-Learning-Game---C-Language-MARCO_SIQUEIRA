@@ -845,9 +845,9 @@ Mostra tudo na tela
 
 ---
 
-# O que o aluno aprende de verdade
+# O que você aprende de verdade
 
-O aluno começa a entender:
+você começa a entender:
 
 ```text
 jogo não é apenas personagem andando
