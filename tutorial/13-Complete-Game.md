@@ -622,9 +622,9 @@ GAMEPLAY LOOP
 
 ---
 
-# O que o aluno aprende de verdade
+# O que você aprende de verdade
 
-O aluno entende visualmente:
+Você entende visualmente:
 
 ```text
 malloc cria entidades
