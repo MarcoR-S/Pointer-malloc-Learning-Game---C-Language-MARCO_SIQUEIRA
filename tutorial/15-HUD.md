@@ -537,11 +537,9 @@ Esse painel funciona como a área visual da HUD.
 
 ---
 
-# Por que aumentamos de 90 para 115?
+# Se a barra de vida ficar próxima de textos, aumente de 90 para 115
 
-Na versão anterior, a barra de vida ficava muito próxima dos textos.
-
-Agora usamos:
+Agora use:
 
 ```c
 altura = 115
