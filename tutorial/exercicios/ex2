@@ -1,1 +1,32 @@
+#include "raylib.h"
 
+int main()
+{
+    InitWindow(800, 600, "Draw Rectangle");
+
+    while (!WindowShouldClose())
+    {
+        BeginDrawing();
+
+        ClearBackground(RAYWHITE);
+
+        DrawRectangle(100, 50, 200, 100, RED);
+
+
+        DrawRectangle(100,400,150,80, GREEN);
+
+        DrawRectangle(300,300,200,150, BROWN)
+        DrawTriangle(
+            (Vector2){ 400, 200 },  // Vértice do topo (no meio e acima)
+            (Vector2){ 300, 300 },  // Vértice inferior esquerdo
+            (Vector2){ 500, 300 },  // Vértice inferior direito
+            RED
+        );
+
+        EndDrawing();
+    }
+
+    CloseWindow();
+
+    return 0;
+}
