@@ -1,0 +1,27 @@
+#include "raylib.h"
+
+int main()
+{
+    InitWindow(800, 600, "Basic Movement");
+
+    int x = 400;
+    int a = 200;
+
+    while (!WindowShouldClose())
+    {
+        x1 += 5;
+        a += 10;
+
+        BeginDrawing();
+
+        ClearBackground(RAYWHITE);
+
+        DrawRectangle(x, 250, 200, 50, RED);
+        DrawRectangle(a, 250, 50,50, GREEN);
+        EndDrawing();
+    }
+
+    CloseWindow();
+
+    return 0;
+}
