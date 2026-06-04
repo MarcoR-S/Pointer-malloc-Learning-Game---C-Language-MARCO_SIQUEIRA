@@ -1,0 +1,37 @@
+#include "raylib.h"
+
+int main()
+{
+    InitWindow(800, 600, "Delta Time");
+
+    SetTargetFPS(30);
+
+    float x = 0;
+    float velocidade = 600;
+
+    float x1 = 0;
+    float velocidade1 = 300;
+
+    while (!WindowShouldClose())
+    {
+        float delta = GetFrameTime();
+
+        x += velocidade * delta;
+        x1 += velocidade1 * delta;
+
+        BeginDrawing();
+
+        ClearBackground(RAYWHITE);
+
+        DrawRectangle((int)x, 250, 100, 100, BLUE);
+        DrawRectangle((int)x1, 500, 40,40,RED);
+
+        DrawFPS(700, 10);
+
+        EndDrawing();
+    }
+
+    CloseWindow();
+
+    return 0;
+}
