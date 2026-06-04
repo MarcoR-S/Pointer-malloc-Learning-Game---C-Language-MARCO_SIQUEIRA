@@ -1,0 +1,42 @@
+#include "raylib.h"
+
+int main()
+{
+    InitWindow(800, 600, "Enemies");
+
+    int enemyX = 700;
+    int enemyY = 300;
+    int direction = -1;
+    int direction1 = -1;
+
+    while (!WindowShouldClose())
+    {
+        enemyX += direction * 15;
+        enemyY += direction1 * 5
+
+        if (enemyX <= 0 || enemyX >= 700)
+        {
+            direction *= -1;
+        }
+        if (enemyY <= 0 || enemyY >= 500)
+        {
+            direction1 *= -1;
+        }
+        
+
+        BeginDrawing();
+
+        ClearBackground(RAYWHITE);
+
+        DrawRectangle(enemyX, 200, 100, 100, RED);
+         DrawRectangle(200, enemyY, 100, 100, YELLOW);
+
+        DrawText("Enemy AI", 10, 10, 20, BLACK);
+
+        EndDrawing();
+    }
+
+    CloseWindow();
+
+    return 0;
+}
