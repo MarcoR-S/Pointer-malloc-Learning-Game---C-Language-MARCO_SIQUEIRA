@@ -1,0 +1,37 @@
+#include "raylib.h"
+
+int main()
+{
+    InitWindow(800, 600, "Audio");
+
+    InitAudioDevice();
+
+    Sound sound = LoadSound("tiro.wav");
+    Music musica =  LoadMusicStream("ambiente.mp3");
+
+    while (!WindowShouldClose())
+    {
+        if (IsKeyPressed(KEY_ENTER) || IsKeyPressed(KEY_A) || IsKeyPressed(KEY_ESCAPE))
+        {
+            PlaySound(sound);
+        }
+        
+        UpdateMusicStream(musica);
+        BeginDrawing();
+    
+        ClearBackground(RAYWHITE);
+
+        DrawText("Pressione ESPACO para tocar som", 120, 250, 20, BLACK);
+
+        EndDrawing();
+    }
+    
+    UnloadMusicStream(musica);
+    UnloadSound(sound);
+
+    CloseAudioDevice();
+
+    CloseWindow();
+
+    return 0;
+}
