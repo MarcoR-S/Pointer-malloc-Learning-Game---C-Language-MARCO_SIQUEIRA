@@ -1,0 +1,28 @@
+#include "raylib.h"
+
+int main()
+{
+    InitWindow(800, 600, "Textures");
+
+    Texture2D sprite = LoadTexture("player.png");
+    Texture2d sprite2 = LoadTexture("pakkun.png");
+
+    while (!WindowShouldClose())
+    {
+        BeginDrawing();
+
+        ClearBackground(RAYWHITE);
+
+        DrawTexture(sprite, 300, 200, WHITE);
+        DrawTexture(sprite2, 200, 100, WHITE);
+
+        EndDrawing();
+    }
+
+    UnloadTexture(sprite);
+    UnloadTexture(sprite2)
+
+    CloseWindow();
+
+    return 0;
+}
