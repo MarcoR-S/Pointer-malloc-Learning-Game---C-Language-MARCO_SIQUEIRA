@@ -1,0 +1,88 @@
+#include "raylib.h"
+
+int main()
+{
+    InitWindow(800, 600, "Keyboard Input");
+
+    int x = 350;
+    int y = 250;
+
+    int x1 = 200
+    int y1 = 150
+    
+    int velocidade = 15;
+    int velocidade1 = 20
+
+    while (!WindowShouldClose())
+    {
+        if (IsKeyDown(KEY_RIGHT)) x += velocidade;
+        if (IsKeyDown(KEY_LEFT)) x -= velocidade;
+        if (IsKeyDown(KEY_UP)) y -= velocidade;
+        if (IsKeyDown(KEY_DOWN)) y += velocidade;
+        
+        if(IsKeyDown(KEY_RIGHT) && IsKeyDown(KEY_UP){
+          x+= velocidade;
+          y -= velocidade;
+        }
+         if(IsKeyDown(KEY_RIGHT) && IsKeyDown(KEY_DOWN){
+          x+= velocidade;
+          y += velocidade;
+        }
+          if(IsKeyDown(KEY_LEFT) && IsKeyDown(KEY_UP){
+          x-= velocidade;
+          y -= velocidade;
+        }
+         if(IsKeyDown(KEY_LEFT) && IsKeyDown(KEY_DOWN){
+          x-= velocidade1;
+          y += velocidade1;
+        }
+        if(x > 800){
+         x = 799;
+        }
+        if(y > 600){
+         y = 599;
+        }
+
+        if (IsKeyDown(KEY_D)) x1 += velocidade1;
+        if (IsKeyDown(KEY_A)) x1 -= velocidade1;
+        if (IsKeyDown(KEY_W)) y1 -= velocidade1;
+        if (IsKeyDown(KEY_S)) y1 += velocidade1;
+        
+        if(IsKeyDown(KEY_D) && IsKeyDown(KEY_W){
+          x1+= velocidade1;
+          y1 -= velocidade1;
+        }
+         if(IsKeyDown(KEY_D) && IsKeyDown(KEY_DS){
+          x1+= velocidade1;
+          y1 += velocidade1;
+        }
+          if(IsKeyDown(KEY_A) && IsKeyDown(KEY_W){
+          x1-= velocidade1;
+          y1 -= velocidade1;
+        }
+         if(IsKeyDown(KEY_A) && IsKeyDown(KEY_S){
+          x1-= velocidade1;
+          y1 += velocidade1;
+        }
+        if(x1 > 800){
+         x1 = 799;
+        }
+        if(y1 > 600){
+         y1 = 599;
+        }
+
+        BeginDrawing();
+
+        ClearBackground(RAYWHITE);
+
+        DrawRectangle(x, y, 100, 100, RED);
+
+        DrawText("Use as setas do teclado", 10, 10, 20, BLACK);
+
+        EndDrawing();
+    }
+
+    CloseWindow();
+
+    return 0;
+}
