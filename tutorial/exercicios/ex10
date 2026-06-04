@@ -1,0 +1,63 @@
+#include "raylib.h"
+
+int main()
+{
+    InitWindow(800, 600, "Shooting");
+    InitAudioDevice();
+    Sound tiro = LoadSound("tiro.mp3");
+    
+    int ammo = 10;
+    
+    int playerX = 100;
+
+    int bulletX = playerX;
+    int bulletY = 300;
+
+    bool shooting = false;
+
+    while (!WindowShouldClose())
+    {
+        if (IsKeyDown(KEY_RIGHT)) playerX += 5;
+        if (IsKeyDown(KEY_LEFT)) playerX -= 5;
+
+        if(IsKeyPressed(KEY_R)) ammo = 10;
+        
+        if (IsKeyPressed(KEY_SPACE) && !shooting && ammo != 0)
+        {
+            shooting = true;
+            bulletX = playerX + 40;
+            bulletY = 500;
+            ammo -= 1;
+            PlaySound(tiro);
+        }
+      
+        if (shooting)
+        {
+            bulletY -= 20;
+
+            if (bulletY < 0)
+            {
+                shooting = false;
+            }
+        }
+
+        BeginDrawing();
+
+        ClearBackground(RAYWHITE);
+
+        DrawRectangle(playerX, 500, 100, 50, BLUE);
+        DrawText(TextFormat("Ammo: %d", ammo), playerX, 470, 20, BLACK); 
+        if (shooting)
+        {
+            DrawRectangle(bulletX, bulletY, 10, 20, YELLOW);
+        }
+
+        EndDrawing();
+    }
+
+    UnloadSound(tiro);
+    CloseAudioDevice();
+    CloseWindow();
+
+    return 0;
+}
