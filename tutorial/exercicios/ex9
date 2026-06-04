@@ -1,0 +1,70 @@
+#include "raylib.h"
+
+int main()
+{
+    InitWindow(800, 600, "Collision");
+
+    Rectangle player = {100, 200, 100, 100};
+    Rectangle enemy1 = {500, 200, 50, 50};
+    Rectangle enemy2 = {500, 100, 50, 50};
+    Rectangle enemy3 = {500, 40, 50, 50};
+    Rectangle enemy4 = {500, 2700, 50, 50};
+
+    int pontos = 0;
+    
+    while (!WindowShouldClose())
+    {
+        if (IsKeyDown(KEY_RIGHT)) player.x += 5;
+        if (IsKeyDown(KEY_LEFT)) player.x -= 5;
+        if (IsKeyDown(KEY_UP)) player.y -= 5;
+        if(IsKeyDown(KEY_DOWN)) player.y += 5;
+
+        bool collision = CheckCollisionRecs(player, enemy1);
+        bool collision2 = CheckCollisionRecs(player, enemy2);
+        bool collision3 = CheckCollisionRecs(player, enemy3);
+        bool collision4 = CheckCollisionRecs(player, enemy4);
+
+        BeginDrawing();
+
+        ClearBackground(RAYWHITE);
+
+        DrawRectangleRec(player, BLUE);
+
+        if (collision)
+            DrawRectangleRec(enemy1, RED);
+            DrawText("COLIDIU!",player.x, player.y, 20, BLACK);
+            pontos += 1;
+        else
+            DrawRectangleRec(enemy1, GREEN);
+
+        if (collision2)
+            DrawRectangleRec(enemy2, RED);
+            DrawText("COLIDIU!",player.x, player.y, 20, BLACK);
+            pontos += 1;
+        else
+            DrawRectangleRec(enemy2, GREEN);
+            
+        if (collision3)
+            DrawRectangleRec(enemy3, RED);
+            DrawText("COLIDIU!",player.x, player.y, 20, BLACK);
+            pontos += 1;
+        else
+            DrawRectangleRec(enemy3, GREEN);
+
+            
+          if (collision4)
+            DrawRectangleRec(enemy4, RED);
+            DrawText("COLIDIU!",player.x, player.y, 20, BLACK);
+            pontos += 1;
+        else
+            DrawRectangleRec(enemy4, GREEN);
+
+        DrawText("Encoste no bloco", 10, 10, 20, BLACK);
+
+        EndDrawing();
+    }
+
+    CloseWindow();
+
+    return 0;
+}
