@@ -1,0 +1,108 @@
+#include "raylib.h"
+#include <stdio.h>
+
+typedef struct SaveData
+{
+    Vector2 jogador;
+    int score;
+    int vida;
+    char nome[50];
+    int faseAtual;
+} SaveData;
+
+void SalvarJogo(SaveData dados)
+{
+    FILE *arquivo = fopen("save.txt", "w");
+
+    if (arquivo != NULL)
+    {
+        fprintf(arquivo, "%f\n", dados.jogador.x);
+        fprintf(arquivo, "%f\n", dados.jogador.y);
+        fprintf(arquivo, "%d\n", dados.score);
+        fprintf(arquivo, "%d\n", dados.vida);
+        fprintf(arquivo, "%s\n", dados.nome);
+        fprintf(arquivo, "%d\n", dados.faseAtual);
+
+        fclose(arquivo);
+    }
+}
+
+void CarregarJogo(SaveData *dados)
+{
+    FILE *arquivo = fopen("save.txt", "r");
+
+    if (arquivo != NULL)
+    {
+        fscanf(arquivo, "%f", &dados->jogador.x);
+        fscanf(arquivo, "%f", &dados->jogador.y);
+        fscanf(arquivo, "%d", &dados->score);
+        fscanf(arquivo, "%d", &dados->vida);
+        fscanf(arquivo, "%s", dados->nome);
+        fscanf(arquivo, "%d", &dados->faseAtual);
+
+        fclose(arquivo);
+    }
+}
+
+int main(void)
+{
+    InitWindow(1200, 700, "Save System Completo");
+    SetTargetFPS(60);
+
+    SaveData dados;
+    dados.jogador = (Vector2){300, 300};
+    dados.score = 0;
+    dados.vida = 100;
+    TextCopy(dados.nome, "Heroi");
+    dados.faseAtual = 1;
+
+    float velocidade = 300;
+
+    while (!WindowShouldClose())
+    {
+        float delta = GetFrameTime();
+
+        if (IsKeyDown(KEY_RIGHT)) dados.jogador.x += velocidade * delta;
+        if (IsKeyDown(KEY_LEFT))  dados.jogador.x -= velocidade * delta;
+        if (IsKeyDown(KEY_UP))    dados.jogador.y -= velocidade * delta;
+        if (IsKeyDown(KEY_DOWN))  dados.jogador.y += velocidade * delta;
+
+        if (IsKeyPressed(KEY_P)) dados.score += 10;
+
+        if (IsKeyPressed(KEY_H))
+        {
+            dados.vida -= 10;
+            if (dados.vida < 0) dados.vida = 100;
+        }
+
+        if (IsKeyPressed(KEY_F))
+        {
+            dados.faseAtual += 1;
+            if (dados.faseAtual > 5) dados.faseAtual = 1;
+        }
+
+        if (IsKeyPressed(KEY_S)) SalvarJogo(dados);
+        if (IsKeyPressed(KEY_L)) CarregarJogo(&dados);
+
+        BeginDrawing();
+        ClearBackground(RAYWHITE);
+
+        DrawRectangleV(dados.jogador, (Vector2){50, 50}, BLUE);
+
+        DrawRectangle(0, 0, 1200, 150, Fade(LIGHTGRAY, 0.9f));
+        DrawText("Save System em Raylib", 20, 15, 30, DARKBLUE);
+        DrawText("Setas = mover | P = +Score | H = Tirar Vida | F = Mudar Fase", 20, 50, 20, DARKGRAY);
+        DrawText("S = salvar | L = carregar", 20, 80, 20, MAROON);
+
+        DrawText(TextFormat("Nome: %s", dados.nome), 20, 115, 20, BLACK);
+        DrawText(TextFormat("Vida: %d", dados.vida), 250, 115, 20, RED);
+        DrawText(TextFormat("Fase: %d", dados.faseAtual), 450, 115, 20, ORANGE);
+        DrawText(TextFormat("Score: %d", dados.score), 650, 115, 20, BLACK);
+        DrawText(TextFormat("Pos: %.0f, %.0f", dados.jogador.x, dados.jogador.y), 850, 115, 20, BLACK);
+
+        EndDrawing();
+    }
+
+    CloseWindow();
+    return 0;
+}
