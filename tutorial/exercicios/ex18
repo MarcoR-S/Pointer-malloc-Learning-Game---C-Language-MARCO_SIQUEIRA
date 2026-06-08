@@ -1,0 +1,239 @@
+// =========================================
+// IMPORTA RAYLIB
+// =========================================
+
+#include "raylib.h"
+
+// =========================================
+// MAIN
+// =========================================
+
+int main(void)
+{
+    // Cria janela
+    InitWindow(1200, 700, "Camera2D");
+
+    // Define FPS
+    SetTargetFPS(60);
+
+    // =========================================
+    // JOGADOR
+    // =========================================
+  
+    // Posição do jogador no mundo
+    Vector2 jogador = { 500, 500 };
+
+    // Velocidade
+    float velocidade = 300;
+
+
+    Vector2 miniPos = { 980, 480 };
+    Vector2 miniSize = { 200, 200 };
+
+    float mundoLargura = 10000.0f;
+    float mundoAltura = 10000.0f;
+
+    float escalaX = miniSize.x / mundoLargura;
+    float escalaY = miniSize.y / mundoAltura;
+
+    
+    // =========================================
+    // CAMERA
+    // =========================================
+
+    Camera2D camera = { 0 };
+
+    // Centro da câmera na tela
+    camera.offset = (Vector2){ 600, 350 };
+
+    // Alvo da câmera
+    camera.target = jogador;
+
+    // Rotação da câmera
+    camera.rotation = 0.0f;
+
+    // Zoom
+    camera.zoom = 1.0f;
+
+    // =========================================
+    // LOOP PRINCIPAL
+    // =========================================
+
+    while (!WindowShouldClose())
+    {
+        // =========================================
+        // UPDATE
+        // =========================================
+
+        // Delta time
+        float delta = GetFrameTime();
+
+        // Movimento direita
+        if (IsKeyDown(KEY_RIGHT))
+            jogador.x += velocidade * delta;
+
+        // Movimento esquerda
+        if (IsKeyDown(KEY_LEFT))
+            jogador.x -= velocidade * delta;
+
+        // Movimento cima
+        if (IsKeyDown(KEY_UP))
+            jogador.y -= velocidade * delta;
+
+        // Movimento baixo
+        if (IsKeyDown(KEY_DOWN))
+            jogador.y += velocidade * delta;
+
+        // Atualiza alvo da câmera
+        camera.target.x +=
+        (jogador.x - camera.target.x) * 0.1f;;
+
+        // Zoom com mouse wheel
+        camera.zoom += GetMouseWheelMove() * 0.1f;
+
+        if (jogador.x < -10000) jogador.x = -10000;
+        if (jogador.x > 9950)  jogador.x = 9950;
+        if (jogador.y < -10000) jogador.y = -10000;
+        if (jogador.y > 9950)  jogador.y = 9950;
+
+        // Limites do zoom
+        if (camera.zoom < 0.2f)
+            camera.zoom = 0.2f;
+
+        if (camera.zoom > 5.0f)
+            camera.zoom = 5.0f;
+
+        // Rotação com teclas
+        if (IsKeyDown(KEY_Q))
+            camera.rotation -= 50 * delta;
+
+        if (IsKeyDown(KEY_E))
+            camera.rotation += 50 * delta;
+
+        // =========================================
+        // DRAW
+        // =========================================
+
+        BeginDrawing();
+
+        // Fundo
+        ClearBackground(RAYWHITE);
+
+        // =========================================
+        // MODO CAMERA 2D
+        // =========================================
+
+        BeginMode2D(camera);
+
+        // =========================================
+        // MUNDO
+        // =========================================
+
+        // Grid do mundo
+        for (int x = -10000; x < 10000; x += 100)
+        {
+            DrawLine(x, -10000, x, 10000, LIGHTGRAY);
+        }
+
+        for (int y = -10000; y < 10000; y += 100)
+        {
+            DrawLine(-10000, y, 10000, y, LIGHTGRAY);
+        }
+
+        // Centro do mundo
+        DrawCircle(0, 0, 20, RED);
+
+        // Jogador
+        DrawRectangleV(
+            jogador,
+            (Vector2){50, 50},
+            BLUE
+        );
+
+        // Objetos do mundo
+        DrawRectangle(1000, 300, 200, 200, GREEN);
+        DrawRectangle(-800, -400, 300, 150, ORANGE);
+        DrawCircle(-1200, 700, 100, PURPLE);
+
+        // Finaliza modo câmera
+        EndMode2D();
+
+        // =========================================
+        // HUD
+        // =========================================
+
+        DrawRectangle(0, 0, 1200, 120, Fade(LIGHTGRAY, 0.8f));
+
+        DrawText(
+            "Camera2D em Raylib",
+            20,
+            20,
+            30,
+            DARKBLUE
+        );
+
+        DrawText(
+            "Setas = mover | Mouse Wheel = zoom | Q/E = rotacao",
+            20,
+            60,
+            20,
+            DARKGRAY
+        );
+
+        DrawText(
+            TextFormat("Posicao: %.0f %.0f",
+                       jogador.x,
+                       jogador.y),
+            20,
+            90,
+            20,
+            BLACK
+        );
+
+        DrawText(
+            TextFormat("Zoom: %.2f",
+                       camera.zoom),
+            350,
+            90,
+            20,
+            BLACK
+        );
+
+        DrawText(
+            TextFormat("Rotacao: %.1f",
+                       camera.rotation),
+            520,
+            90,
+            20,
+            BLACK
+        );
+
+        DrawRectangleV(miniPos, miniSize, Fade(BLACK, 0.6f)); // Fundo preto semi-transparente
+        DrawRectangleLines(miniPos.x, miniPos.y, miniSize.x, miniSize.y, DARKGRAY);
+
+    
+       
+        float centroMiniX = miniPos.x + ((0 + 5000) * escalaX);
+        float centroMiniY = miniPos.y + ((0 + 5000) * escalaY);
+        DrawCircle(centroMiniX, centroMiniY, 4, RED);
+
+    
+        DrawRectangle(miniPos.x + ((1000 + 5000) * escalaX), miniPos.y + ((300 + 5000) * escalaY), 200 * escalaX, 200 * escalaY, GREEN);
+       
+        DrawRectangle(miniPos.x + ((-800 + 5000) * escalaX), miniPos.y + ((-400 + 5000) * escalaY), 300 * escalaX, 150 * escalaY, ORANGE);
+      
+        DrawCircle(miniPos.x + ((-1200 + 5000) * escalaX), miniPos.y + ((700 + 5000) * escalaY), 100 * escalaX, PURPLE);
+
+      
+        float miniJogadorX = miniPos.x + ((jogador.x + 5000) * escalaX);
+        float miniJogadorY = miniPos.y + ((jogador.y + 5000) * escalaY);
+        DrawRectangle(miniJogadorX, miniJogadorY, 50 * escalaX + 2, 50 * escalaY + 2, BLUE); 
+
+        EndDrawing();
+    }
+
+    // Fecha janela
+    CloseWindow();
+
+    return 0;
+}
