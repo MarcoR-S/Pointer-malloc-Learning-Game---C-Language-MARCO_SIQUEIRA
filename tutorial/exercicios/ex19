@@ -1,0 +1,128 @@
+#include "raylib.h"
+
+#define MAP_WIDTH 40
+#define MAP_HEIGHT 24
+#define TILE_SIZE 64
+
+int main(void)
+{
+    InitWindow(1280, 768, "Tilemap Expandido em Raylib");
+    SetTargetFPS(60);
+
+    int mapa[MAP_HEIGHT][MAP_WIDTH] =
+    {
+        {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
+        {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+        {1,0,2,2,0,0,0,3,3,0,0,0,0,0,2,2,0,0,0,1,1,0,5,5,5,0,0,0,0,0,2,2,0,0,0,4,4,0,0,1},
+        {1,0,0,0,0,0,0,3,3,0,0,0,0,0,0,0,0,0,0,1,1,0,5,5,5,0,0,0,0,0,0,0,0,0,0,4,4,0,0,1},
+        {1,0,0,0,0,2,2,2,2,2,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,2,2,2,2,2,0,0,0,0,0,0,0,0,1},
+        {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+        {1,0,0,3,3,0,0,0,0,0,0,0,2,2,2,0,0,0,0,1,1,0,0,3,3,0,0,0,0,0,0,0,2,2,2,0,0,0,0,1},
+        {1,0,0,3,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,3,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+        {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+        {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+        {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+        {1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1},
+        {1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1},
+        {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+        {1,0,2,2,0,0,0,3,3,0,0,0,0,0,2,2,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,2,2,0,0,0,0,0,0,1},
+        {1,0,0,0,0,0,0,3,3,0,0,0,0,0,0,0,0,0,0,1,1,0,4,4,4,4,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+        {1,0,0,0,0,2,2,2,2,2,0,0,0,0,0,0,0,0,0,1,1,0,4,4,4,4,2,2,2,2,2,0,0,0,0,0,0,0,0,1},
+        {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+        {1,0,0,3,3,0,0,0,0,0,0,0,2,2,2,0,0,0,0,1,1,0,0,3,3,0,0,0,0,0,0,0,2,2,2,0,0,0,0,1},
+        {1,0,0,3,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,3,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+        {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5,5,0,0,1},
+        {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5,5,0,0,1},
+        {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+        {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}
+    };
+
+    Vector2 jogador = { 100, 100 };
+    float velocidade = 250;
+
+    Camera2D camera = { 0 };
+    camera.offset = (Vector2){ 1280 / 2.0f, 768 / 2.0f };
+    camera.target = jogador;
+    camera.rotation = 0.0f;
+    camera.zoom = 1.0f;
+
+    while (!WindowShouldClose())
+    {
+        float delta = GetFrameTime();
+        Vector2 antigaPosicao = jogador;
+
+        if (IsKeyDown(KEY_RIGHT))  jogador.x += velocidade * delta;
+        if (IsKeyDown(KEY_LEFT))   jogador.x -= velocidade * delta;
+        if (IsKeyDown(KEY_UP))     jogador.y -= velocidade * delta;
+        if (IsKeyDown(KEY_DOWN))   jogador.y += velocidade * delta;
+
+        camera.target = jogador;
+
+        int coluna = jogador.x / TILE_SIZE;
+        int linha = jogador.y / TILE_SIZE;
+
+        if (linha >= 0 && linha < MAP_HEIGHT && coluna >= 0 && coluna < MAP_WIDTH)
+        {
+            int tileAtual = mapa[linha][coluna];
+            if (tileAtual == 1 || tileAtual == 3 || tileAtual == 4 || tileAtual == 5)
+            {
+                jogador = antigaPosicao;
+            }
+        }
+
+        BeginDrawing();
+        ClearBackground(RAYWHITE);
+
+        BeginMode2D(camera);
+
+        for (int linha = 0; linha < MAP_HEIGHT; linha++)
+        {
+            for (int coluna = 0; coluna < MAP_WIDTH; coluna++)
+            {
+                int x = coluna * TILE_SIZE;
+                int y = linha * TILE_SIZE;
+                int tile = mapa[linha][coluna];
+
+                if (tile == 1)
+                {
+                    DrawRectangle(x, y, TILE_SIZE, TILE_SIZE, DARKGRAY);
+                }
+                else if (tile == 2)
+                {
+                    DrawRectangle(x, y, TILE_SIZE, TILE_SIZE, GREEN);
+                }
+                else if (tile == 3)
+                {
+                    DrawRectangle(x, y, TILE_SIZE, TILE_SIZE, BLUE);
+                }
+                else if (tile == 4)
+                {
+                    DrawRectangle(x, y, TILE_SIZE, TILE_SIZE, ORANGE);
+                }
+                else if (tile == 5)
+                {
+                    DrawRectangle(x, y, TILE_SIZE, TILE_SIZE, GREEN);
+                    DrawCircle(x + TILE_SIZE / 2, y + TILE_SIZE / 2, TILE_SIZE / 3, DARKGREEN);
+                }
+                else
+                {
+                    DrawRectangleLines(x, y, TILE_SIZE, TILE_SIZE, LIGHTGRAY);
+                }
+            }
+        }
+
+        DrawRectangleV(jogador, (Vector2){40, 40}, RED);
+
+        EndMode2D();
+
+        DrawRectangle(0, 0, 1280, 90, Fade(LIGHTGRAY, 0.9f));
+        DrawText("Tilemap Expandido em Raylib", 20, 20, 30, DARKBLUE);
+        DrawText("Setas = mover jogador | Câmera Ativa", 20, 55, 20, DARKGRAY);
+        DrawText("Novos blocos: 4 (Lava), 5 (Árvore)", 700, 55, 20, MAROON);
+
+        EndDrawing();
+    }
+
+    CloseWindow();
+    return 0;
+}
