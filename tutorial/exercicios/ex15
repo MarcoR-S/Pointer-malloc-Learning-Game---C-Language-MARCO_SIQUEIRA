@@ -1,0 +1,208 @@
+// =========================================
+// IMPORTA RAYLIB
+// =========================================
+
+#include "raylib.h"
+#include <stdlib.h>
+// =========================================
+// MAIN
+// =========================================
+
+int main(void)
+{
+    // Cria janela
+    InitWindow(1000, 600, "HUD em Raylib");
+
+    // Define FPS
+    SetTargetFPS(60);
+
+    // =========================================
+    // JOGADOR
+    // =========================================
+
+    // Posição inicial
+    Vector2 jogador = { 480, 300 };
+
+    // Velocidade
+    float velocidade = 4.0f;
+
+    // =========================================
+    // HUD
+    // =========================================
+
+    // Pontuação
+    int score = 0;
+
+    // Vida atual
+    int vida = 100;
+
+    // Munição
+    int municao = 30;
+
+    // Tempo de jogo
+    float tempo = 0;
+
+    float xp = 0.0f;
+    int moeda = 0;
+    float energia = 100.0f;
+
+    
+    // =========================================
+    // LOOP PRINCIPAL
+    // =========================================
+
+    while (!WindowShouldClose())
+    {
+        // =========================================
+        // UPDATE
+        // =========================================
+
+        // Atualiza tempo
+        tempo += GetFrameTime();
+       energia -= GetFrameTime() * 2.5f; 
+        if (energia < 0) energia = 0;
+        xp += GetFrameTime() * 3.3f;
+        if (xp > 100) xp = 100;
+        
+        if (IsKeyDown(KEY_R)) {
+            energia += 1.0f; 
+            if (energia > 100) energia = 100;
+        }
+        
+         if(IsKeyDown(KEY_C){
+          moeda += 1;
+        }
+
+        
+        // Movimento direita
+        if (IsKeyDown(KEY_RIGHT))
+            jogador.x += velocidade;
+
+        // Movimento esquerda
+        if (IsKeyDown(KEY_LEFT))
+            jogador.x -= velocidade;
+
+        // Movimento cima
+        if (IsKeyDown(KEY_UP))
+            jogador.y -= velocidade;
+
+        // Movimento baixo
+        if (IsKeyDown(KEY_DOWN))
+            jogador.y += velocidade;
+
+        // Simula ganhar pontos
+        if (IsKeyPressed(KEY_P))
+        {
+            score += 10;
+        }
+
+        // Simula tomar dano
+        if (IsKeyPressed(KEY_H))
+        {
+            vida -= 10;
+
+            if (vida < 0)
+                vida = 0;
+        }
+
+        // Simula gastar munição
+        if (IsKeyPressed(KEY_SPACE))
+        {
+            municao--;
+
+            if (municao < 0)
+                municao = 0;
+        }
+
+        // =========================================
+        // DRAW
+        // =========================================
+
+        BeginDrawing();
+
+        // Fundo
+        ClearBackground(RAYWHITE);
+
+        // =========================================
+        // MUNDO DO JOGO
+        // =========================================
+
+        // Desenha jogador
+        DrawRectangleV(
+            jogador,
+            (Vector2){40, 40},
+            BLUE
+        );
+
+        // =========================================
+        // HUD
+        // =========================================
+
+        // Fundo da HUD
+        DrawRectangle(
+            0,
+            0,
+            1000,
+            115,
+            LIGHTGRAY
+        );
+
+        // Linha separadora
+        DrawLine(
+            0,
+            115,
+            1000,
+            115,
+            DARKGRAY
+        );
+
+        // Título
+        DrawText(
+            "HUD DO JOGO",
+            20,
+            15,
+            28,
+            DARKBLUE
+        );
+
+        
+       DrawText(TextFormat("Score: %d", score), 20, 60, 20, BLACK);
+        DrawText(TextFormat("Moedas: %d", moeda), 20, 95, 20, GOLD); 
+
+        
+        
+        DrawText(TextFormat("Vida: %d", vida), 250, 60, 18, BLACK);
+        DrawRectangle(350, 60, 150, 18, RED);                 
+        DrawRectangle(350, 60, (int)(vida * 1.5f), 18, GREEN); // MUDANÇA: Multiplicador proporcional ao tamanho (150px max)
+        DrawRectangleLines(350, 60, 150, 18, BLACK);           
+
+        
+        DrawText(TextFormat("Energia: %d", (int)energia), 250, 95, 18, BLACK);
+        DrawRectangle(350, 95, 150, 18, MAROON);                 
+        DrawRectangle(350, 95, (int)(energia * 1.5f), 18, YELLOW); 
+        DrawRectangleLines(350, 95, 150, 18, BLACK);              
+
+        
+        // BARRA DE XP (CORREÇÃO: Antes estava sobrepondo a barra de vida)
+        DrawText(TextFormat("XP: %d", (int)xp), 560, 60, 18, BLACK);
+        DrawRectangle(610, 60, 150, 18, GRAY);                 
+        DrawRectangle(610, 60, (int)(xp * 1.5f), 18, SKYBLUE); 
+        DrawRectangleLines(610, 60, 150, 18, BLACK);           
+
+        
+        DrawText(TextFormat("Municao: %d", municao), 560, 95, 18, BLACK);
+
+        
+        DrawText(TextFormat("Tempo: %.1f s", tempo), 820, 75, 22, DARKGREEN);
+
+        
+        DrawText("Use as SETAS do teclado para mover o quadrado azul.", 20, 565, 16, DARKGRAY);
+
+        EndDrawing();
+    }
+
+    // Fecha janela
+    CloseWindow();
+
+    return 0;
+}
