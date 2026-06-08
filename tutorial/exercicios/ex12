@@ -1,0 +1,52 @@
+#include "raylib.h"
+#include <stdlib.h>
+
+typedef struct Enemy
+{
+    int x;
+    int y;
+    Color color; 
+} Enemy;
+
+int main()
+{
+    InitWindow(800, 600, "Pointers and Memory");
+
+    int quantidade = 20;
+    Color coresDisponiveis[] = { RED, ORANGE, GOLD, GREEN, BLUE };
+
+   Enemy *enemies = calloc(quantidade, sizeof(Enemy)); 
+
+    for (int i = 0; i < quantidade; i++)
+    {
+        enemies[i].x = 100 * i + 50;
+        enemies[i].y = 200;
+ enemies[i].color = coresDisponiveis[i%5];
+    }
+
+    while (!WindowShouldClose())
+    {
+        BeginDrawing();
+
+        ClearBackground(RAYWHITE);
+
+        for (int i = 0; i < quantidade; i++)
+        {
+            DrawRectangle(enemies[i].x,
+                          enemies[i].y,
+                          50,
+                          50,
+                         enemies[i].color);
+        }
+
+        DrawText("Dynamic Memory Example", 10, 10, 20, BLACK);
+
+        EndDrawing();
+    }
+
+    free(enemies);
+
+    CloseWindow();
+
+    return 0;
+}
