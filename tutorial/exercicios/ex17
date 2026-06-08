@@ -1,0 +1,205 @@
+// =========================================
+// IMPORTA RAYLIB
+// =========================================
+
+#include "raylib.h"
+
+// =========================================
+// MAIN
+// =========================================
+
+int main(void)
+{
+    // Cria janela
+    InitWindow(1000, 600, "Sprite Sheet");
+
+    // Define FPS
+    SetTargetFPS(60);
+
+    // =========================================
+    // CARREGA TEXTURA
+    // =========================================
+
+    Texture2D sprite =
+        LoadTexture("player.png");
+
+    // =========================================
+    // CONFIGURAÇÃO DOS FRAMES
+    // =========================================
+
+    // Quantidade de frames
+    int frames = 5;
+
+    // Frame atual
+    int frameAtual = 0;
+
+    // Largura de cada frame
+    int larguraFrame =
+        sprite.width / frames;
+
+    // Altura do frame
+    int alturaFrame =
+        sprite.height;
+
+    // Controle do tempo da animação
+    float tempoAnimacao = 0;
+
+    // Velocidade da animação
+    float velocidadeAnimacao = 0.4f;
+
+    // =========================================
+    // POSIÇÃO DO PERSONAGEM
+    // =========================================
+
+    Vector2 posicao = { 450, 250 };
+
+    // =========================================
+    // LOOP PRINCIPAL
+    // =========================================
+
+    while (!WindowShouldClose())
+    {
+        // =========================================
+        // UPDATE
+        // =========================================
+
+        // Delta time
+        float delta = GetFrameTime();
+
+        // Atualiza tempo da animação
+        tempoAnimacao += delta;
+
+        // Troca frame
+        if (tempoAnimacao >= velocidadeAnimacao)
+        {
+            // Próximo frame
+            frameAtual++;
+
+            // Reinicia animação
+            if (frameAtual >= frames)
+            {
+                frameAtual = 0;
+            }
+
+            // Reinicia temporizador
+            tempoAnimacao = 0;
+        }
+
+        // Movimento do personagem
+        if (IsKeyDown(KEY_RIGHT))
+            posicao.x += 200 * delta;
+
+        if (IsKeyDown(KEY_LEFT))
+            posicao.x -= 200 * delta;
+
+        if (IsKeyDown(KEY_UP))
+            posicao.y -= 200 * delta;
+
+        if (IsKeyDown(KEY_DOWN))
+            posicao.y += 200 * delta;
+
+        // =========================================
+        // SOURCE RECTANGLE
+        // =========================================
+
+        Rectangle source = {
+
+            // Frame atual
+            frameAtual * larguraFrame,
+
+            // Linha da sprite sheet
+            0,
+
+            // Largura do frame
+            larguraFrame,
+
+            // Altura do frame
+            alturaFrame
+        };
+
+        // =========================================
+        // DESTINATION RECTANGLE
+        // =========================================
+
+        Rectangle dest = {
+
+            // Posição X
+            posicao.x,
+
+            // Posição Y
+            posicao.y,
+
+            // Escala horizontal
+            larguraFrame * 3,
+
+            // Escala vertical
+            alturaFrame * 2
+        };
+
+        // =========================================
+        // DRAW
+        // =========================================
+
+        BeginDrawing();
+
+        ClearBackground(RAYWHITE);
+
+        // Título
+        DrawText(
+            "Animacao com Sprite Sheet",
+            20,
+            20,
+            30,
+            DARKBLUE
+        );
+
+        // Instruções
+        DrawText(
+            "Use as setas para mover",
+            20,
+            60,
+            20,
+            DARKGRAY
+        );
+
+        // Desenha sprite animado
+        DrawTexturePro(
+            sprite,
+            source,
+            dest,
+            (Vector2){0, 0},
+            0,
+            WHITE
+        );
+
+        // Informações
+        DrawText(
+            TextFormat("Frame Atual: %d",
+                       frameAtual),
+            20,
+            100,
+            20,
+            BLACK
+        );
+
+        DrawText(
+            "Sprite Sheet = varios frames em uma unica imagem",
+            20,
+            560,
+            18,
+            MAROON
+        );
+
+        EndDrawing();
+    }
+
+    // =========================================
+    // LIBERA MEMÓRIA
+    // =========================================
+
+    UnloadTexture(sprite);
+
+    CloseWindow();
+
+    return 0;
+}
