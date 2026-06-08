@@ -1,0 +1,117 @@
+#include "raylib.h"
+#include <math.h>
+
+#define MAX_ENEMIES 4
+
+typedef enum EnemyState
+{
+    IDLE,
+    PATROL,
+    CHASE
+} EnemyState;
+
+typedef struct Enemy
+{
+    Vector2 posicao;
+    float velocidade;
+    int direcao;
+    EnemyState estado;
+    float tempoEstado;
+} Enemy;
+
+int main(void)
+{
+    InitWindow(1200, 700, "Multi-Enemy AI");
+    SetTargetFPS(60);
+
+    Vector2 jogador = { 300, 300 };
+    float velocidadeJogador = 300;
+
+    Enemy inimigos[MAX_ENEMIES];
+
+    inimigos[0] = (Enemy){ (Vector2){ 700, 300 },  220.0f,  1, PATROL, 0.0f };
+    inimigos[1] = (Enemy){ (Vector2){ 950, 150 },  200.0f, -1, IDLE,   0.0f };
+    inimigos[2] = (Enemy){ (Vector2){ 200, 500 },  240.0f,  1, PATROL, 0.0f };
+    inimigos[3] = (Enemy){ (Vector2){ 1000, 450 }, 210.0f, -1, IDLE,   0.0f };
+
+    while (!WindowShouldClose())
+    {
+        float delta = GetFrameTime();
+
+        if (IsKeyDown(KEY_RIGHT)) jogador.x += velocidadeJogador * delta;
+        if (IsKeyDown(KEY_LEFT))  jogador.x -= velocidadeJogador * delta;
+        if (IsKeyDown(KEY_UP))    jogador.y -= velocidadeJogador * delta;
+        if (IsKeyDown(KEY_DOWN))  jogador.y += velocidadeJogador * delta;
+
+        for (int i = 0; i < MAX_ENEMIES; i++)
+        {
+            float distancia = Vector2Distance(jogador, inimigos[i].posicao);
+
+            if (distancia < 400)
+            {
+                inimigos[i].estado = CHASE;
+            }
+            else if (inimigos[i].estado == CHASE)
+            {
+                inimigos[i].estado = PATROL;
+            }
+
+            if (inimigos[i].estado == IDLE)
+            {
+                inimigos[i].tempoEstado += delta;
+                if (inimigos[i].tempoEstado >= 2.0f)
+                {
+                    inimigos[i].estado = PATROL;
+                    inimigos[i].tempoEstado = 0.0f;
+                }
+            }
+            else if (inimigos[i].estado == PATROL)
+            {
+                inimigos[i].tempoEstado += delta;
+                if (inimigos[i].tempoEstado >= 4.0f)
+                {
+                    inimigos[i].estado = IDLE;
+                    inimigos[i].tempoEstado = 0.0f;
+                }
+                else
+                {
+                    inimigos[i].posicao.x += inimigos[i].velocidade * inimigos[i].direcao * delta;
+
+                    if (inimigos[i].posicao.x > 1100) inimigos[i].direcao = -1;
+                    if (inimigos[i].posicao.x < 50)   inimigos[i].direcao = 1;
+                }
+            }
+            else if (inimigos[i].estado == CHASE)
+            {
+                Vector2 direcao = Vector2Subtract(jogador, inimigos[i].posicao);
+                direcao = Vector2Normalize(direcao);
+
+                inimigos[i].posicao.x += direcao.x * inimigos[i].velocidade * 1.3f * delta;
+                inimigos[i].posicao.y += direcao.y * inimigos[i].velocidade * 1.3f * delta;
+            }
+        }
+
+        BeginDrawing();
+        ClearBackground(RAYWHITE);
+
+        DrawRectangle(0, 620, 1200, 80, DARKGREEN);
+        DrawRectangleV(jogador, (Vector2){50, 50}, BLUE);
+
+        for (int i = 0; i < MAX_ENEMIES; i++)
+        {
+            Color corInimigo;
+            if (inimigos[i].estado == IDLE)        corInimigo = YELLOW;
+            else if (inimigos[i].estado == PATROL) corInimigo = ORANGE;
+            else                                   corInimigo = RED;
+
+            DrawRectangleV(inimigos[i].posicao, (Vector2){50, 50}, corInimigo);
+
+            if (inimigos[i].estado == CHASE)
+            {
+                DrawLineV(jogador, inimigos[i].posicao, RED);
+            }
+        }
+
+        DrawRectangle(0, 0, 1200, 120, Fade(LIGHTGRAY, 0.9f));
+        DrawText("Multi-Enemy State AI", 20, 20, 30, DARKBLUE);
+        Draw
