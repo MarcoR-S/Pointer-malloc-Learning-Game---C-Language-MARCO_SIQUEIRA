@@ -1,0 +1,4 @@
+**RODE NO TERMINAL**
+
+gcc main.c -o main.exe -Iraylib/include -Lraylib/lib -lraylib -lopengl32 -lgdi32 -lwinmm
+./main.exe
