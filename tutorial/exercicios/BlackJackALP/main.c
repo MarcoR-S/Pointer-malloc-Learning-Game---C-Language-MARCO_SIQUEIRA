@@ -79,12 +79,14 @@ int main(void)
 
     Texture2D mesa;
     Music ambiente;
+    Sound vitoria;
+    Sound loss; 
 
     InitAudioDevice();
 
     EstadoJogo estadoAtual = MENU;
 
-    PlayMusicStream(ambiente);
+    
 
     //1 Estado
     int gameState = 0;
@@ -104,8 +106,15 @@ int main(void)
     //SRC
     InitWindow(width, height, "BlackJack ALP - IDP");
 
-    mesa = LoadTexture("mesa.png");
+    vitoria = LoadSound("Victory!.wav");
+    loss = LoadSound("loss.ogg");
     ambiente = LoadMusicStream("ambiente.mp3");
+     mesa = LoadTexture("mesa.png");
+
+
+    PlayMusicStream(ambiente);
+    SetMusicVolume(ambiente, 0.2f);
+
 
     SetTargetFPS(30);
 
@@ -208,16 +217,21 @@ int main(void)
                         vitorias +=1;
                         DrawText("VOCE VENCEU!", width/2 - 150, height/2 - 100, 40, GOLD);
                         gameState = 4;
+                        StopMusicStream(ambiente);
+                        PlaySound(vitoria);
                     } 
                     else{
                         derrotas +=1;
                         DrawText("CASA VENCEU!", width/2 - 150, height/2 - 100, 40, RED);
                         gameState = 4;
+                        StopMusicStream(ambiente);
+                        PlaySound(loss);
                     }
                     break;
                 case 4:
                     if (resultado == 'p') {
                         DrawText("VOCE VENCEU!", width/2 - 150, height/2 - 100, 40, GOLD);
+                        
                     } 
                     else{
                         DrawText("CASA VENCEU!", width/2 - 150, height/2 - 100, 40, RED);
@@ -225,6 +239,9 @@ int main(void)
                     //Recomeçar o jogo
                     Botao(restartB, "RESTART", RED);
                     if(CheckCollisionPointRec(mousePos, restartB)&&IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
+                        StopSound(vitoria);   
+                        StopSound(loss);      
+                        PlayMusicStream(ambiente);
                         reiniciar(&contagemP, &contagemD, &gameState, &resultado);
                     }
                     break;
@@ -242,7 +259,13 @@ int main(void)
     // 3. Fecha tudo
     UnloadTexture(mesa);
     UnloadMusicStream(ambiente);
+    UnloadSound(vitoria);
+    UnloadSound(loss);
     CloseAudioDevice();
     CloseWindow();
     return 0;
 }
+
+
+//gcc main.c -o main.exe -Iraylib/include -Lraylib/lib -lraylib -lopengl32 -lgdi32 -lwinmm
+//./main.exe
